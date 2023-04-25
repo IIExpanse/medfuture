@@ -1,61 +1,89 @@
-import { useState } from "react";
+import {useState} from "react";
 import "./App.css"
 
 function App() {
 
-  const [login, setLogin] = useState("")
-  const [validation, setValidation] = useState(true);
+    const [login, setLogin] = useState("")
+    const [psw, setPassword] = useState("");
+    const [emailValidation, setEmailValidation] = useState(true);
+    const [credentialsValidation, setCredentialsValidation] = useState(true);
+    const [success, setSuccess] = useState(false);
 
+    const handleLoginChange = (e) => {
+        setLogin(e.target.value);
+        setEmailValidation(login.includes("@") && login.length <= 25 && login.includes("."));
+    };
 
-  const handleChange = (e) => {
-    setLogin(e.target.value);
-  };
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
 
-  const handleSubmit = async (e) => {
-    setValidation(login.includes("@") && login.length <= 25 && login.includes("."))
-  
+    const handleSubmit = async (e) => {
+        setEmailValidation(login.includes("@") && login.length <= 25 && login.includes("."));
+        if (!emailValidation) {
+            return;
+        }
+        e.preventDefault();
 
-    // if (validation) {
-    //   let response = (await fetch("http://localhost:3000")).json.toString;
-    //   validation = response === "true";
-    // }
-  };
+        let formData = new FormData();
+        formData.append('username', login);
+        formData.append('password', psw);
 
-  return (
-    <div className="App">
-      <div className="div1">
-        <p><b>Med</b>future</p>
-      </div>
-      <div className="div2">
-        <p className="p1">Добро пожаловать!</p>
-        <div className="div3">
-          <p className="p2">Введите данные для входа</p>
-          <p className={validation ? "not_error" : "error"} > Неверный логин или пароль</p>
-          <input
-            className={validation ? "inp1" : "inp1_err"}
-            placeholder="Логин"
-            value={login}
-            onChange={handleChange}
-          />
+        const response = await fetch("http://localhost:8080/login", {
+            method: "POST",
+            body: formData
+        });
 
-          <input placeholder="Пароль" />
-          <button
-            className="btn1"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            Войти
-          </button>
+        if (response.status !== 200) {
+            setSuccess(false);
+            setCredentialsValidation(false);
 
-          <button className="btn2" >Забыл(а) пароль или логин</button>
+        } else {
+            setSuccess(true);
+        }
+    };
+
+    return (
+        <div className="App">
+            <div className="div1">
+                <p><b>Med</b>future</p>
+            </div>
+            <div className="div2">
+                <p className="p1">Добро пожаловать!</p>
+                <div className="div3">
+                    <p className="p2">Введите данные для входа</p>
+                    <p className={emailValidation ? "hidden" : "error"}> Неверный формат электронной почты</p>
+                    <p className={credentialsValidation ? "hidden" : "error"}> Неверный логин или пароль</p>
+                    <p className={!success ? "hidden" : "login_success"}> Успешный вход!</p>
+                    <input
+                        className={emailValidation ? "inp1" : "inp1_err"}
+                        placeholder="Логин"
+                        value={login}
+                        onChange={handleLoginChange}
+                    />
+
+                    <input
+                        placeholder="Пароль"
+                        value={psw}
+                        onChange={handlePasswordChange}
+                    />
+                    <button
+                        className="btn1"
+                        type="submit"
+                        onClick={handleSubmit}
+                    >
+                        Войти
+                    </button>
+
+                    <button className="btn2">Забыл(а) пароль или логин</button>
+                </div>
+                <div className="div4">
+                    <p className="p3">Нужна помощь?</p>
+                    <a href="/">Нажми сюда</a>
+                </div>
+            </div>
         </div>
-        <div className="div4">
-          <p className="p3">Нужна помощь?</p>
-          <a href="/">Нажми сюда</a>
-        </div>
-      </div>
-    </div >
-  );
+    );
 }
 
 export default App;

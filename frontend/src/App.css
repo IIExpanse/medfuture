@@ -142,6 +142,11 @@ a {
   margin-bottom: 20px;
 }
 
-.not_error {
+.hidden {
   display: none;
+}
+
+.login_success {
+  background: transparent;
+  color: #10f608;
 }

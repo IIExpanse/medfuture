@@ -1,0 +1,35 @@
+version: '3.1'
+services:
+  auth-server:
+    build: auth-server
+    image: auth-server
+    container_name: auth-server-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-db
+    command:
+      - p 8080
+
+  frontend:
+    build: frontend
+    image: frontend
+    container_name: frontend-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-server
+
+  auth-db:
+    image: postgres:14-alpine
+    container_name: auth-db-container
+    ports:
+      - "6541:5432"
+    volumes:
+      - /var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: iamroot
+      POSTGRES_DB: auth-db
+    command:
+      - -p 6541
