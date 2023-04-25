@@ -8,8 +8,6 @@ services:
       - "8080:8080"
     depends_on:
       - auth-db
-    command:
-      - p 8080
 
   frontend:
     build: frontend
@@ -31,5 +29,3 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: iamroot
       POSTGRES_DB: auth-db
-    command:
-      - -p 6541
