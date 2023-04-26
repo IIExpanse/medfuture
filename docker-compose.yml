@@ -5,7 +5,7 @@ services:
     image: auth-server
     container_name: auth-server-container
     ports:
-      - "0.0.0.0:8080:8080"
+      - "8080:8080"
     depends_on:
       - auth-db
 
