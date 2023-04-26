@@ -11,10 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
 
 import javax.sql.DataSource;
-import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -25,12 +23,12 @@ public class DefaultSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setExposedHeaders(List.of("Authorization"));
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+//        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+//        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
+//        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
         http
 //                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -45,7 +43,7 @@ public class DefaultSecurityConfig {
                 );
 //                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
 
-        http.cors().configurationSource(request -> corsConfiguration);
+//        http.cors().configurationSource(request -> corsConfiguration);
         // ...
         return http.build();
     }
