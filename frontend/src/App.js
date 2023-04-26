@@ -29,7 +29,7 @@ function App() {
         formData.append('username', login);
         formData.append('password', psw);
 
-        const response = await fetch("http://auth-server:8080/login", {
+        const response = await fetch("http://localhost:8080/login", {
             method: "POST",
             body: formData
         });
