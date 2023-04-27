@@ -8,6 +8,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://auth-db:5432/auth-db
+#    url: jdbc:postgresql://localhost:6541/auth-db
     driverClassName: org.postgresql.Driver
     username: postgres
     password: iamroot

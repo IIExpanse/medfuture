@@ -1,5 +1,7 @@
 package ru.expanse.medfuture.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.HeaderWriter;
 
 import javax.sql.DataSource;
 
@@ -36,14 +39,17 @@ public class DefaultSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests((httpRequest) -> httpRequest
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/success").permitAll())
+                        .requestMatchers("/success").permitAll()
+                        .requestMatchers("/").permitAll())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("http://localhost:8080/success")
-                );
+                        .defaultSuccessUrl("http://localhost:8080/success"));
 //                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
 
+        http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.addHeaderWriter(new CustomHeaderWriter()));
+
 //        http.cors().configurationSource(request -> corsConfiguration);
+//        http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
         // ...
         return http.build();
     }
@@ -68,6 +74,19 @@ public class DefaultSecurityConfig {
         service.createUser(admin);
 
         return service;
+    }
+}
+
+class CustomHeaderWriter implements HeaderWriter {
+
+    @Override
+    public void writeHeaders(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods",
+                "GET, POST, PUT, DELETE, PUT, OPTIONS, PATCH, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Private-Network", "true");
     }
 }
 
