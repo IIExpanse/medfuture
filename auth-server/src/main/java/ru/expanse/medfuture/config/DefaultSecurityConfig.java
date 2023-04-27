@@ -3,6 +3,7 @@ package ru.expanse.medfuture.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,8 @@ import javax.sql.DataSource;
 public class DefaultSecurityConfig {
 
     private final DataSource dataSource;
+    @Value("${base.url}")
+    private String baseUrl;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,7 +46,7 @@ public class DefaultSecurityConfig {
                         .requestMatchers("/").permitAll())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("http://localhost:8080/success"));
+                        .defaultSuccessUrl("http://" + baseUrl + ":8080/success"));
 //                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
 
         http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.addHeaderWriter(new CustomHeaderWriter()));
